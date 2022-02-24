@@ -1,4 +1,4 @@
-from cProfile import label
+import datetime
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -18,6 +18,9 @@ def load_cases_by_date():
     cases_by_date['percent_positive_avg'] = cases_by_date.percent_positive.rolling(7).mean()
     cases_by_date['date_collected'] = cases_by_date.index
     cases_by_date['date_collected'] = cases_by_date['date_collected'].astype('datetime64')
+    cases_by_date['ten_days_prior'] = cases_by_date['positive_avg'].shift(10)
+    cases_by_date['ten_day_difference'] = cases_by_date['positive_avg'] - cases_by_date['ten_days_prior']
+    cases_by_date['ten_day_percent_change'] = 100 * cases_by_date['ten_day_difference'] /  cases_by_date['ten_days_prior']
     return cases_by_date
 
 def load_hosp_by_date():
@@ -32,30 +35,66 @@ def load_hosp_by_date():
     hosp_by_date['avg_hospitalizations'] = hosp_by_date.Yes.rolling(7).mean()
     return hosp_by_date
 
+def load_text(file_path):
+    with open(file_path) as in_file:
+        return in_file.read()
+
+
 # Notes:
 # Values can't fall below 5
 # Values are a 7-day rolling window; it's unclear what the city uses
 # Hospitalizations are based on confirmed cases, it's unclear whether the city
 # uses suspected cases for their metric
 
+st.set_page_config(layout="wide")
+
+header_text = load_text('header_text.md')
+st.write(header_text)
 
 cases_df = load_cases_by_date()
+
+col1, col2 = st.columns([1, 1])
+
+today = datetime.date.today()
+thirty_days_ago = today - datetime.timedelta(days=30)
+
+
+
 plot = px.line(cases_df, x='date_collected', y='positive_avg', title='Positive COVID Tests by Date Collected')
 
 plot.add_hrect(y0=0, y1=100, fillcolor='green', opacity=.2, layer='below')
 plot.add_hrect(y0=100, y1=225, fillcolor='yellow', opacity=.2, layer='below')
 plot.add_hrect(y0=225, y1=500, fillcolor='orange', opacity=.2, layer='below')
 plot.add_hrect(y0=500, y1=4250, fillcolor='red', opacity=.2, layer='below')
+plot.update_xaxes(type='date', range=[thirty_days_ago, today])
+thirty_day_max = cases_df.iloc[-30:,].positive.max()
+plot.update_yaxes(range=[0, thirty_day_max + 100])
 
-st.plotly_chart(plot)
+with col1:
+    st.plotly_chart(plot)
 
 plot = px.line(cases_df, x='date_collected', y='percent_positive_avg', title='Percent Positivity')
 plot.add_hrect(y0=0, y1=2, fillcolor='green', opacity=.2, layer='below')
 plot.add_hrect(y0=2, y1=5, fillcolor='yellow', opacity=.2, layer='below')
 plot.add_hrect(y0=5, y1=10, fillcolor='orange', opacity=.2, layer='below')
 plot.add_hrect(y0=10, y1=50, fillcolor='red', opacity=.2, layer='below')
+plot.update_xaxes(type='date', range=[thirty_days_ago, today])
+thirty_day_max = cases_df.iloc[-30:,].percent_positive_avg.max()
+plot.update_yaxes(range=[0, thirty_day_max + 5])
 
-st.plotly_chart(plot)
+
+with col2:
+    st.plotly_chart(plot)
+
+
+plot = px.line(cases_df[cases_df['date_collected'] > '2020-04-15'], x='date_collected', y='ten_day_percent_change', title='Case Percent Change from Ten Days Prior')
+plot.add_hrect(y0=-70, y1=50, fillcolor='green', opacity=.2, layer='below')
+plot.add_hrect(y0=50, y1=300, fillcolor='red', opacity=.2, layer='below')
+plot.update_xaxes(type='date', range=[thirty_days_ago, today])
+thirty_day_max = cases_df.iloc[-30:,].ten_day_percent_change.max()
+with col1:
+    st.plotly_chart(plot)
+
 
 hosp_by_date = load_hosp_by_date()
 plot = px.line(hosp_by_date, x='report_date', y='avg_hospitalizations', title='COVID Hospitalizations')
@@ -63,5 +102,11 @@ plot.add_hrect(y0=0, y1=50, fillcolor='green', opacity=.2, layer='below')
 plot.add_hrect(y0=50, y1=100, fillcolor='yellow', opacity=.2, layer='below')
 plot.add_hrect(y0=100, y1=200, fillcolor='orange', opacity=.2, layer='below')
 #plot.add_hrect(y0=500, y1=600, fillcolor='red', opacity=.2, layer='below')
+plot.update_xaxes(type='date', range=[thirty_days_ago, today])
+thirty_day_max = hosp_by_date.iloc[-30:,].avg_hospitalizations.max()
+plot.update_yaxes(range=[0, thirty_day_max + 5])
+with col2:
+    st.plotly_chart(plot)
 
-st.plotly_chart(plot)
+footer_text = load_text('footer_text.md')
+st.write(footer_text)
