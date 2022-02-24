@@ -3,7 +3,6 @@ import datetime
 import pandas as pd
 import plotly.express as px
 import streamlit as st
-import urllib
 
 
 # Cache the result based on the current day to keep the Philly OpenData API from getting queried needlessly
@@ -98,7 +97,7 @@ if __name__ == '__main__':
     thirty_day_max = cases_df.iloc[-30:,].positive.max()
     plot.update_yaxes(range=[0, thirty_day_max + 100])
     with col1:
-        st.plotly_chart(plot)
+        st.plotly_chart(plot, use_container_width=True)
 
     # Percent positive plot
     labels = {'date_collected': 'Date Collected',
@@ -113,7 +112,7 @@ if __name__ == '__main__':
     thirty_day_max = cases_df.iloc[-30:,].percent_positive_avg.max()
     plot.update_yaxes(range=[0, thirty_day_max + 5])
     with col2:
-        st.plotly_chart(plot)
+        st.plotly_chart(plot, use_container_width=True)
 
     # Percent change plot
     labels = {'date_collected': 'Date Collected',
@@ -127,7 +126,7 @@ if __name__ == '__main__':
     plot.update_xaxes(type='date', range=[thirty_days_ago, today])
     thirty_day_max = cases_df.iloc[-30:,].ten_day_percent_change.max()
     with col1:
-        st.plotly_chart(plot)
+        st.plotly_chart(plot, use_container_width=True)
 
     # Hospitalizations plot
     labels = {'report_date': 'Report Date',
@@ -142,7 +141,7 @@ if __name__ == '__main__':
     thirty_day_max = hosp_by_date.iloc[-30:,].avg_hospitalizations.max()
     plot.update_yaxes(range=[0, thirty_day_max + 5])
     with col2:
-        st.plotly_chart(plot)
+        st.plotly_chart(plot, use_container_width=True)
 
     # Set up post-data text
     footer_text = load_text('footer_text.md')
