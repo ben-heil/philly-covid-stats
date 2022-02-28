@@ -76,9 +76,8 @@ if __name__ == '__main__':
     thirty_days_ago = today - datetime.timedelta(days=30)
     st.set_page_config(layout="wide")
 
-    # Set up header
     header_text = load_text('header_text.md')
-    st.write(header_text)
+    st.write(header_text, unsafe_allow_html=True)
 
     cases_df = load_cases_by_date(today)
     hosp_by_date = load_hosp_by_date(today)
@@ -145,4 +144,4 @@ if __name__ == '__main__':
 
     # Set up post-data text
     footer_text = load_text('footer_text.md')
-    st.write(footer_text)
+    st.write(footer_text, unsafe_allow_html=True)
