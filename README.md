@@ -11,4 +11,4 @@ pip install -r requirements.txt
 streamlit run streamlit_app.py
 ```
 
-Alternatively, navigate to the cloud version at TODO.
+Alternatively, navigate to the cloud version at https://share.streamlit.io/ben-heil/philly-covid-stats/main.
