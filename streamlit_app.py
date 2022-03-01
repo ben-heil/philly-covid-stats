@@ -30,8 +30,8 @@ def load_cases_by_date(today: datetime.datetime) -> pd.DataFrame:
     # For more info, see https://www.opendataphilly.org/dataset/covid-cases
     cases_by_date.loc[cases_by_date['positive'].isnull(), 'positive'] = 5
     cases_by_date['percent_positive'] = 100 *  cases_by_date['positive'] / (cases_by_date['positive'] + cases_by_date['negative'])
-    cases_by_date['positive_avg'] = cases_by_date.positive.rolling(7).mean()
-    cases_by_date['percent_positive_avg'] = cases_by_date.percent_positive.rolling(7).mean()
+    cases_by_date['positive_avg'] = cases_by_date.positive.rolling(14).mean()
+    cases_by_date['percent_positive_avg'] = cases_by_date.percent_positive.rolling(14).mean()
     cases_by_date['date_collected'] = cases_by_date.index
     cases_by_date['date_collected'] = cases_by_date['date_collected'].astype('datetime64')
     cases_by_date['ten_days_prior'] = cases_by_date['positive_avg'].shift(10)
@@ -62,7 +62,7 @@ def load_hosp_by_date(today: datetime.datetime) -> pd.DataFrame:
     hosp_by_date = hosp_by_date[hosp_by_date.index.notnull()]
     hosp_by_date.loc[hosp_by_date['Yes'].isnull(), 'Yes'] = 5
     hosp_by_date['report_date'] = hosp_by_date.index
-    hosp_by_date['avg_hospitalizations'] = hosp_by_date.Yes.rolling(7).mean()
+    hosp_by_date['avg_hospitalizations'] = hosp_by_date.Yes.rolling(14).mean()
     return hosp_by_date
 
 
