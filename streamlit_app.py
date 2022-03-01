@@ -131,11 +131,7 @@ if __name__ == '__main__':
     labels = {'report_date': 'Report Date',
             'avg_hospitalizations': 'Hospitalizations for COVID (Fourteen-Day Average)'}
     plot = px.line(hosp_by_date, x='report_date', y='avg_hospitalizations',
-                labels=labels, title='COVID Hospitalizations')
-    plot.add_hrect(y0=0, y1=50, fillcolor='green', opacity=.2, layer='below')
-    plot.add_hrect(y0=50, y1=100, fillcolor='yellow', opacity=.2, layer='below')
-    plot.add_hrect(y0=100, y1=200, fillcolor='orange', opacity=.2, layer='below')
-    #plot.add_hrect(y0=500, y1=600, fillcolor='red', opacity=.2, layer='below')
+                labels=labels, title='COVID Hospitalizations Per Day')
     plot.update_xaxes(type='date', range=[thirty_days_ago, today])
     thirty_day_max = hosp_by_date.iloc[-30:,].avg_hospitalizations.max()
     plot.update_yaxes(range=[0, thirty_day_max + 5])
