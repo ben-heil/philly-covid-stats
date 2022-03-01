@@ -85,7 +85,7 @@ if __name__ == '__main__':
     col1, col2 = st.columns([1, 1])
 
     # Positive test plot
-    labels = {'date_collected': 'Date Collected', 'positive_avg': 'Positive Test Count (Seven-Day Average)'}
+    labels = {'date_collected': 'Date Collected', 'positive_avg': 'Positive Test Count (Fourteen-Day Average)'}
     plot = px.line(cases_df, x='date_collected', y='positive_avg',
                 labels=labels, title='Positive COVID Tests by Date Collected')
     plot.add_hrect(y0=0, y1=100, fillcolor='green', opacity=.2, layer='below')
@@ -100,7 +100,7 @@ if __name__ == '__main__':
 
     # Percent positive plot
     labels = {'date_collected': 'Date Collected',
-            'percent_positive_avg': 'Percent of Tests Positive (Seven-Day Average)'}
+            'percent_positive_avg': 'Percent of Tests Positive (Fourteen-Day Average)'}
     plot = px.line(cases_df, x='date_collected', y='percent_positive_avg',
                 labels=labels, title='Percent Positivity')
     plot.add_hrect(y0=0, y1=2, fillcolor='green', opacity=.2, layer='below')
@@ -129,7 +129,7 @@ if __name__ == '__main__':
 
     # Hospitalizations plot
     labels = {'report_date': 'Report Date',
-            'avg_hospitalizations': 'Hospitalizations for COVID (Seven-Day Average)'}
+            'avg_hospitalizations': 'Hospitalizations for COVID (Fourteen-Day Average)'}
     plot = px.line(hosp_by_date, x='report_date', y='avg_hospitalizations',
                 labels=labels, title='COVID Hospitalizations')
     plot.add_hrect(y0=0, y1=50, fillcolor='green', opacity=.2, layer='below')
