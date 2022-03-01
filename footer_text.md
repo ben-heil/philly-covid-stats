@@ -30,5 +30,5 @@
 
 - Data for a given day is based on the day a test is received, not when the result comes in. As a result, the most recent data is likely to consitently undercount both positive and negative tests. From [these graphs](https://www.phila.gov/programs/coronavirus-disease-2019-covid-19/data/testing/), we can assume data that's at least a week old is accurate.
 - Days with fewer than six entries for cases/negative tests/etc are masked for privacy. To avoid undercounting those days I set the value to five. This may lead to overcounting in some cases.
-- The city doesn't define "average", so I used a 7-day right-aligned rolling window. Their definition is likely different.
+- The city doesn't define "average", so I used a 14-day right-aligned rolling window. Their definition for decision making may be different, but that's the window size they refer to [here](https://www.phila.gov/2022-02-28-city-provides-update-on-covid-19-for-monday-february-28-2022/).
 - The hospitalization figure is based on confirmed cases, it's unclear whether the city uses suspected cases for their decision making or all hospitalizations.
